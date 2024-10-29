@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎃 Trick or Treat 🎃</title>
+    <style>
+        /* Import spooky font */
+        @import url('https://fonts.googleapis.com/css2?family=Spooky&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden; /* Prevent scrollbars */
+            background-image: url('halloween.gif'); /* Background image */
+            background-size: cover; /* Cover the entire viewport */
+            background-position: center; /* Center the image */
+        }
+
+        #video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black; /* Background color for video */
+            z-index: 10; /* Ensure it appears above other elements */
+        }
+
+        #intro {
+            position: relative;
+            text-align: center;
+            color: white;
+            font-family: 'Spooky', cursive; /* Use spooky font */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+            z-index: 5; /* Ensure it appears above other elements */
+            opacity: 0; /* Start hidden */
+            transition: opacity 1s; /* Smooth transition */
+        }
+
+        #intro.visible {
+            opacity: 1; /* Fade in when visible */
+        }
+
+        h1 {
+            font-size: 60px; /* Increase font size */
+            margin: 20px 0;
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7); /* Text shadow for spooky effect */
+            display: flex;
+            justify-content: center; /* Center text horizontally */
+            align-items: center; /* Center text vertically */
+            height: 100%; /* Full height */
+        }
+
+        .treat {
+            font-size: 60px;
+            color: orange;
+            position: relative; /* For positioning */
+            display: inline-block; /* Make the background fit the text */
+            padding: 10px; /* Padding around the text */
+        }
+
+        .candy {
+            font-size: 25px; /* Smaller size for candy emojis */
+            position: absolute; /* Positioning */
+        }
+
+        .candy:nth-child(1) {
+            left: 15%; /* Positioning for lollipop */
+            top: 15%; /* Positioning */
+        }
+
+        .candy:nth-child(2) {
+            left: 45%; /* Positioning for candy */
+            top: 0; /* Positioning */
+        }
+
+        .candy:nth-child(3) {
+            left: 85%; /* Adjusted position for chocolate */
+            top: 15%; /* Positioning */
+        }
+
+        .trick {
+            font-size: 60px;
+            color: red;
+            position: relative; /* For positioning */
+            display: inline-block; /* Make the background fit the text */
+            padding: 10px; /* Padding around the text */
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7); /* Text shadow for spooky effect */
+        }
+
+        /* Dripping blood effect for each letter */
+        .trick .letter {
+            position: relative; /* Position for each letter */
+            display: inline-block; /* Make the blood effect fit the letter */
+        }
+
+        .trick .letter::after {
+            content: '';
+            position: absolute;
+            top: 60%; /* Position right at the bottom of the letter */
+            left: 50%;
+            transform: translateX(-50%); /* Center it under the letter */
+            width: 5px; /* Width of the drip */
+            height: 30px; /* Increased height of the drip */
+            background-color: red; /* Blood color */
+            border-radius: 5px; /* Rounded edges */
+            animation: drip 0.5s infinite; /* Dripping effect */
+        }
+
+        @keyframes drip {
+            0% { height: 30px; opacity: 1; }
+            50% { height: 40px; opacity: 0.8; }
+            100% { height: 30px; opacity: 1; }
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 20px;
+            background-color: purple; /* Button color */
+            color: white;
+            border: none;
+            border-radius: 10px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s; /* Smooth transition for hover */
+            margin-top: 20px; /* Space above the button */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); /* Button shadow for depth */
+            z-index: 5; /* Ensure it appears above other elements */
+        }
+
+        button:hover {
+            background-color: darkviolet; /* Darker color on hover */
+            transform: scale(1.05); /* Slight scaling on hover */
+        }
+
+        #result {
+            margin-top: 20px; /* Space above result */
+            display: none; /* Initially hidden */
+            animation: fadeIn 1s; /* Fade in effect */
+            text-align: center; /* Center the text */
+            position: absolute; /* Absolute positioning */
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%); /* Center it */
+            font-size: 48px; /* Larger font size for results */
+            z-index: 5; /* Ensure it appears above other elements */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        #result img {
+            width: 80%; /* Increased size of the pumpkin or jump scare image */
+            max-width: 600px; /* Maximum width for large screens */
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7); /* Image shadow for depth */
+        }
+
+        /* Witch animation */
+        #witch {
+            position: absolute;
+            top: 50%; /* Start from the middle of the screen */
+            left: -400px; /* Start off the left side of the screen */
+            width: 400px; /* Increased size of the witch */
+            transform: translateY(-50%); /* Center vertically */
+            animation: fly 3s forwards; /* Fly animation lasts longer */
+        }
+
+        @keyframes fly {
+            0% {
+                left: -400px; /* Starting position */
+            }
+            100% {
+                left: 100%; /* End off the right side of the screen */
+            }
+        }
+
+        /* Add spooky floating effects to the treat and trick words */
+        .floating {
+            animation: float 2s infinite alternate; /* Floating animation */
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+
+        /* Play button style */
+        #play-button {
+            position: absolute;
+            z-index: 20; /* Make sure it appears above the video */
+            background-color: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        #play-button:hover {
+            transform: scale(1.1); /* Slight scaling on hover */
+        }
+    </style>
+</head>
+<body>
+    <div id="video-container">
+        <video id="intro-video" autoplay playsinline onended="showTrickOrTreat()" style="width: 100%; height: 100%; object-fit: cover;">
+            <source src="halloween_intro.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <button id="play-button" onclick="playVideo()">
+            ▶️
+        </button>
+    </div>
+
+    <div id="intro" class="visible" style="display: none;">
+        <h1>Did you get a <span class="treat floating">TREAT<span class="candy">🍭</span><span class="candy">🍬</span><span class="candy">🍫</span></span> or did you get <span class="trick floating">
+            <span class="letter">T</span>
+            <span class="letter">R</span>
+            <span class="letter">I</span>
+            <span class="letter">C</span>
+            <span class="letter">K</span>
+        </span>?</h1>
+        <button onclick="findOut()">FIND OUT!</button> <!-- Find Out button -->
+    </div>
+
+    <div id="witch" style="display: none;">
+        <img src="witch.png" alt="Witch flying" />
+    </div>
+    
+    <div id="result"></div>
+
+    <audio id="background-music" src="intro.mp3" autoplay loop></audio>
+    <audio id="witch-laugh" src="laughing.mp3" preload="auto"></audio>
+
+    <script>
+        function playVideo() {
+            document.getElementById('intro-video').play();
+            document.getElementById('play-button').style.display = 'none'; // Hide the play button when video starts
+        }
+
+        function showTrickOrTreat() {
+            document.getElementById('video-container').style.display = 'none'; // Hide video container
+            const intro = document.getElementById('intro');
+            intro.style.display = 'flex'; // Change to flex display
+            intro.classList.add('visible'); // Add visible class for fade-in
+            document.getElementById('background-music').play(); // Play background music
+        }
+
+        function findOut() {
+            // Hide the intro and show witch
+            document.getElementById('intro').style.display = 'none';
+            document.getElementById('witch').style.display = 'block';
+            document.getElementById('witch-laugh').play(); // Play the witch laughing sound
+
+            setTimeout(() => {
+                const isTreat = Math.random() < 0.5; // Randomly determine treat or trick
+                document.getElementById('witch').style.display = 'none'; // Hide the witch after she flies away
+                showResult(isTreat); // Show the result
+            }, 3000); // Delay for witch animation
+        }
+
+        function showResult(isTreat) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block'; // Show result div
+            if (isTreat) {
+                resultDiv.innerHTML = '<span class="treat">TREAT</span><img src="pumpkin.png" alt="Pumpkin" />'; // Show TREAT with pumpkin image
+            } else {
+                resultDiv.innerHTML = '<span class="trick">TRICK</span><img src="jump-scare.gif" alt="Jump scare" />'; // Show TRICK with jump scare image
+            }
+        }
+    </script>
+</body>
+</html>
